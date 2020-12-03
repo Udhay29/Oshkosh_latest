@@ -1,0 +1,114 @@
+<div class="row items-grid-parent-single-rack">
+  <div class="col-md-0">
+    <div class="rackChild"></div>
+  </div>
+  <div class="col-md-12 row grid-container">
+    <div class="parent md-table">
+      <div class="tableChild parts-grid">
+        <p-table [value]="filteredData" [columns]="tableFields" [(selection)]="selectedRow" [scrollable]="true"
+          scrollHeight="260px" [loading]="loading" (onHeaderCheckboxToggle)="onTableHeaderCheckboxToggle($event)"
+          (onRowUnselect)="onRowUnselect($event)" (onRowSelect)="onRowSelect($event)" styleClass="items-grid">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of tableFields" />
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width:125px"></th>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.order === 'sort' ? col.field : null"
+                [class]="'header-th ' + col.field" [pTooltip]="col.fullForm" tooltipPosition="top">
+                {{ col.header }}
+                <p-sortIcon *ngIf="col.order === 'sort'" [field]="col.field" (click)="onSort(col.field, $event)">
+                </p-sortIcon>
+              </th>
+            </tr>
+            <tr *ngIf="gridData.length > 0">
+              <th style="width:125px"></th>
+              <th *ngFor="let col of columns" [ngSwitch]="col.type" class="filter-row">
+                <span *ngSwitchCase="'number'" class="number-filter filter">
+                  <input *ngIf="filters.indexOf(col.field) > -1" pInputText type="text" (input)="
+                      debounceFilter($event.target.value, col.field, col.type)
+                    " [disabled]="filters.indexOf(col.field) === -1" numberonly />
+                </span>
+                <span *ngSwitchCase="'dropDown'" class="select-filter filter">
+                  <select
+                    *ngIf="filters.indexOf(col.field) > -1 && dropDownValues[col.field] && dropDownValues[col.field].length > 0"
+                    (change)="
+                      debounceFilter(
+                        $event.target.value,
+                        col.field,
+                        col.type,
+                        col.ddField
+                      )
+                    " [disabled]="filters.indexOf(col.field) === -1">
+                    <option [value]="null">Filter {{ col.header }}</option>
+                    <option *ngFor="let opt of dropDownValues[col.field]">
+                      {{ opt }}
+                    </option>
+                  </select>
+                </span>
+                <span *ngSwitchCase="'checkbox'" class="checkbox-filter filter">
+                  <select *ngIf="filters.indexOf(col.field) > -1" (change)="
+                      debounceFilter(
+                        $event.target.value,
+                        col.field,
+                        col.type,
+                        col.ddField
+                      )
+                    " [disabled]="filters.indexOf(col.field) === -1">
+                    <option [value]="null">Filter {{ col.header }}</option>
+                    <option *ngFor="let opt of checkboxValues[col.field]">
+                      {{ opt }}
+                    </option>
+                  </select>
+                </span>
+                <span *ngSwitchDefault class="filter">
+                  <input *ngIf="filters.indexOf(col.field) > -1" (input)="
+                      debounceFilter($event.target.value, col.field, col.type)
+                    " pInputText [disabled]="filters.indexOf(col.field) === -1" autocomplete="off" />
+                </span>
+              </th>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+              <td style="width:125px">
+                <button type='button' class='button add-rack-btn' [disabled]="disableAddBtn(rowData)"
+                  (click)="scrollToView($event, rowData)"> Add To Rack
+                </button>
+              </td>
+              <td pEditableColumn *ngFor="let col of tableFields" [class]="'value-td ' + col.field">
+                <div *ngIf="col.field === 'WC_STORAGE_UNIT_ID' && wcMasterRack === 'WorkCenterMasterRacks'">
+                  <input pInputText type="text" [required]="true"
+                    [ngClass]="{'error-border': getRowIndex.indexOf(rowIndex) >= 0}" [(ngModel)]="rowData[col.field]"
+                    class="form-control" />
+                  <div style="color: red;" *ngIf="getRowIndex.indexOf(rowIndex) >= 0">*Provide a valid name</div>
+                </div>
+                <ng-container *ngIf="(col.field !== 'WC_STORAGE_UNIT_ID' && col.type !== 'link') ||
+                 (wcMasterRack !== 'WorkCenterMasterRacks' && col.type !== 'link')">
+                  {{rowData[col.field]}}
+                </ng-container>
+                <ng-container *ngIf="col.type === 'link'">
+                  <a href="#"
+                    (click)="navigateToItemPlanDetail($event, rowData)">{{rowData[col.field] || 'Create Item Plan #'}}</a>
+                </ng-container>
+
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length" class="no-records">
+                <span>No records found</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+    </div>
+  </div>
+</div>

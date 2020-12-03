@@ -1,0 +1,90 @@
+<div class="poc-svg-shelf">
+  <div class="wrapper">
+    <div class="poc-wrapper">
+
+      <div cdkDropListGroup *ngIf="filteredDatas.length > 0" class="poc-part">
+        <div class="Left-Items" (click)="addHandStack('LEFT_ITEMS')" *ngIf="fullValue !== undefined"
+          [class]="addRackItem && addRackItem['PRESENTATION_TYPE'] === 'Hand Stack' ? 'handstack Left-Items' : 'Left-Items'">
+          <div>
+            <h6>Left Hand Stack</h6>
+            <div class="ul-list handstack-left" cdkDropList (cdkDropListDropped)="dropHandStack($event)"
+              [cdkDropListData]="fullValue['WorkCenterRack']['LEFT_ITEMS']">
+              <div class="cdkdragdiv" cdkDrag [cdkDragData]="item"
+                *ngFor="let item of fullValue['WorkCenterRack']['LEFT_ITEMS']; let i = index">
+                <span class="itm-id">{{item['ITEM_ID']}}</span> <span class="rmv"
+                  (click)="deleteStack($event, 'LEFT_ITEMS', i, item)">x</span>
+              </div>
+              <div *ngIf="fullValue['WorkCenterRack']['LEFT_ITEMS'].length <= 0">
+                <span class="stack-text">*Add item here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="drag-wrapper">
+          <div class="example-container" *ngFor="let data of filteredDatas; let idx = index">
+            <div class="header">
+              <h2>Shelf {{idx+1}}</h2>
+              <h4><span>Max-width: {{fullValue['WorkCenterRack']['MasterRack']['UNIT_INNER_WIDTH']}}</span>
+                <span>Rem-width: {{lastItem[idx]['width']}}</span>
+                <span>Max-height: {{shelfHeight}}</span>
+              </h4>
+            </div>
+            <div *ngIf="addItemFlag">
+              <input type="checkbox" (change)="addToThisShelf(items)" /> Add to this Shelf
+            </div>
+            <div cdkDropList #itemsref="cdkDropList" cdkDropListOrientation="horizontal"
+              [cdkDropListData]="data['RackItems']" class="example-list" [cdkDropListEnterPredicate]="noReturnPredicate"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box ctr" *ngFor="let item of data['RackItems']; let i = index" [cdkDragData]="item"
+                cdkDrag [ngStyle]="{'width': item.width * ctrWidthScaleFt /uomConversion + 'px'}">
+                <div class="item_des">
+                  <span>{{item.ITEM_ID}} </span>
+                  <span> w: {{item.width}}</span>
+                </div>
+                <div class="bottom-buttons">
+                  <div><input *ngIf="swapArray.indexOf(idx) < 0" type="checkbox" (change)="toggleSwap(i, idx, item)" />
+                  </div>
+                  <button (click)="swap($event, idx, item, i)" *ngIf="swapArray.indexOf(idx) >= 0">swap</button>
+                  <span class="remove" (click)="delete($event,idx, i)">x</span>
+                </div>
+              </div>
+              <div (click)="addContainer(idx)" class="example-box last-item empty-space"
+                *ngIf="lastItem[idx]['width'] > 0"
+                [ngStyle]="{'width': lastItem[idx]['width'] * ctrWidthScaleFt /uomConversion + 'px'}">
+                <div class="item_des">
+                  <span> w: {{lastItem[idx]['width']}}</span>
+                  <p>Add item here</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="Right-Items" (click)="addHandStack('RIGHT_ITEMS')" *ngIf="fullValue !== undefined"
+          [class]="(addRackItem && addRackItem['PRESENTATION_TYPE'] === 'Hand Stack') ? 'handstack Right-Items' : 'Right-Items'">
+          <div>
+            <h6>Right Hand Stack</h6>
+            <div class="ul-list handstack-right" cdkDropList (cdkDropListDropped)="dropHandStack($event)"
+              [cdkDropListData]="fullValue['WorkCenterRack']['RIGHT_ITEMS']">
+              <div class="cdkdragdiv" cdkDrag [cdkDragData]="item"
+                *ngFor="let item of fullValue['WorkCenterRack']['RIGHT_ITEMS']; let i = index">
+                <span class="itm-id">{{item['ITEM_ID']}}</span> <span class="rmv"
+                  (click)="deleteStack($event, 'RIGHT_ITEMS', i, item)">x</span>
+              </div>
+              <div *ngIf="fullValue['WorkCenterRack']['RIGHT_ITEMS'].length <= 0">
+                <span class="stack-text">*Add item here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+    <div class="confirm-button">
+      <button type="button" (click)="getShelfsvg()">Confirm Arrangement</button>
+    </div>
+  </div>
+</div>

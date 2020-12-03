@@ -1,0 +1,241 @@
+<div class="container-single-rack">
+  <div class="search-header">
+    <div class="row">
+      <div class="col-md-12 search-items-container">
+        <div class="search-others">
+          <div class="work-center-single-rack">
+            <!-- <p class="title">Work Center:</p>
+            <pfep-wild-card-lookup [config]="workCenter" [showInvalid]="fieldsEmpty.indexOf('workCenter') > -1"
+              [defaultselecteddropDownValue]="defaultselecteddropDownValue"
+              (changeEvent)="workCenterChangeEvent($event)"></pfep-wild-card-lookup> -->
+            <div class="row">
+              <div *ngFor="let item of wildCardLookUpConfig" [ngClass]="item.modelName + ' search-item-ctr'">
+                <label class='search-item'>{{item.label}}: <span class='required'>*</span></label>
+                <pfep-wild-card-lookup [config]="item"
+                  [defaultselecteddropDownValue]="item.defaultselecteddropDownValue"
+                  (changeEvent)="wildCardChangeEvent($event)"
+                  [showInvalid]="!searchReq[item.modelName] && searchClicked">
+                </pfep-wild-card-lookup>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary search-btn" (click)="getOnSearchGridData()">
+            <img src="assets/images/icon_search.png" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-1" *ngIf="searchResultFlag">
+    <div class="work-center-rack">
+      <h4 class="t-header">Work Center Racks</h4>
+      <pfep-parts-grid #masterRackTable (parentFunforgetRack)="parentFunforgetRack($event)" [wcRack]="wcRack"
+        [gridData]="wcGridData" [tableFields]="tableFieldsForRack" (wcrIDEditFlag)="wcrIDEditFlag($event)">
+      </pfep-parts-grid>
+      <div class="buttons">
+        <span (click)="addRack()">Add</span>
+        <span *ngIf="wcGridData.length > 0 && masterRackTable.selectedRow.length > 0"
+          (click)="removeRackFromGrid()">Remove</span>
+      </div>
+    </div>
+    <div class="work-insights" *ngIf="false">
+      <h4 class="t-header">Work Center insights</h4>
+      <ul>
+        <li>Test1</li>
+        <li>Test2</li>
+        <li>Test3</li>
+        <li>Test4</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row" *ngIf="searchResultFlag && showSVG">
+    <h4 class="col-md-6 t-header section-2-header">Rack Details: {{pocDetails?.WorkCenterRack?.WC_STORAGE_UNIT_ID}}</h4>
+    <h4 class="col-md-2 t-header section-2-header">Rack Visualization</h4>
+    <div class="col-md-4 rack-btns">
+      <div class='change-rack-id'>
+        <span> Rack Id: </span>
+        <input type='text' class='form-control' [ngModel]="this.selectedRackInfo[rackIdKey]"
+          (change)="rackIdChanged($event)" />
+      </div>
+      <div class='notes-ctr'>
+        <button class='notes' (click)="notesPanel.show($event)">
+          <i class='pi pi-paperclip'></i>
+          <span> Notes </span>
+        </button>
+      </div>
+      <section class="download-pdf">
+        <img src='assets/images/download_icon.png'
+          [pTooltip]="disableDownload ? 'Changes have been made to the rack. Please save or refetch the data to download' : 'Download PDF'"
+          (click)='exportToPDF(disableDownload ? false : true)' [ngClass]="{'disable-download': disableDownload}" />
+      </section>
+    </div>
+  </div>
+  <div class="section-2" *ngIf="searchResultFlag && showSVG">
+    <div class="row" [ngSwitch]="pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey]">
+      <div class="col-md-6 poc">
+        <pfep-drag-item #shelfRack (rmvDisable)="rmDisableForPart($event)" (eblAddRckBtn)="eblAddRckBtnData($event)"
+          (CallFrPart)="CallFrPart()" [pocDetails]="pocDetails" [addRackCont]="addRackCont" (ctrAdded)="ctrAdded()"
+          *ngSwitchCase="shelfTypeKey" (generateSvg)="generateSvg($event)">
+        </pfep-drag-item>
+        <pfep-bag-rack #bagRack (rmDisableBag)="rmDisableForPart($event)" (bagEblAddRckBtn)=" eblAddRckBtnData($event)"
+          [pocDetails]="pocDetails" (bagCallPrtData)="CallFrPart()" [addRackCont]="addRackCont"
+          (noOfPlacements)="getNoofPlacements($event)" (generateSvg)="generateSvg($event)" (ctrAdded)="ctrAdded()"
+          *ngSwitchCase="bagTypeKey">
+        </pfep-bag-rack>
+        <pfep-hose-reel #hoseReelRack (rmvDisable)="rmDisableForPart($event)" (eblAddRckBtn)="eblAddRckBtnData($event)"
+          (CallFrPart)="CallFrPart()" [pocDetails]="pocDetails" [addRackCont]="addRackCont" (ctrAdded)="ctrAdded()"
+          *ngSwitchCase="hoseReelTypeKey" (generateSvg)="generateSvg($event)">
+        </pfep-hose-reel>
+        <pfep-hose-rack #hoseRack (rmDisableBag)="rmDisableForPart($event)" (bagEblAddRckBtn)="eblAddRckBtnData($event)"
+          [pocDetails]="pocDetails" (bagCallPrtData)="CallFrPart()" [addRackCont]="addRackCont"
+          (noOfPlacements)="getNoofPlacements($event)" (generateSvg)="generateSvg($event)" (ctrAdded)="ctrAdded()"
+          *ngSwitchCase="hoseRackTypeKey">
+        </pfep-hose-rack>
+
+        <div class="svg-part">
+          <div>
+            <form [formGroup]="selectbox"
+              [class]="(pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] === 'Bag' || pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] === 'Hose Rack') ? 'change-rack-form bag-type' : 'change-rack-form'">
+              <div class="form-group">
+                <label
+                  *ngIf="(pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] ==='Shelf' || pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] === 'Hose Reel')"
+                  for="" class="col-form-label change-rack-form-label"># of
+                  Shelves:</label>
+                <label
+                  *ngIf="pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] ==='Bag' || pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] ==='Hose Rack'"
+                  for="" class="col-form-label change-rack-form-label"># of
+                  Placements:</label>
+                <div class="">
+                  <select formControlName="noOfCount" (change)="getNoOfRowCount($event)"
+                    class='form-control select-placment'>
+                    <option [ngValue]="null">Select</option>
+                    <ng-container
+                      *ngIf="(pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] ==='Shelf' || pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] === 'Hose Reel')">
+                      <option *ngFor="let item of counter(4);let i = index" [ngValue]="i+1">{{i+1}}</option>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] ==='Bag' || pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] ==='Hose Rack'">
+                      <option *ngFor="let item of counter(4);let i = index" [ngValue]="i+1">{{i+1}}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group"
+                *ngIf="pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] === 'Bag' || pocDetails['WorkCenterRack']['MasterRack'][rackTypeKey] === 'Hose Rack'">
+                <label for="" class="col-form-label change-rack-form-label"># of hooks per Placement:</label>
+                <div class="">
+                  <input type="text" #focusInput class='form-control' formControlName="noOfHooks"
+                    (keyup)="maxItemPerRow($event)" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 svg">
+        <pfep-svg-single-rack></pfep-svg-single-rack>
+      </div>
+    </div>
+  </div>
+  <div class="work-center-part" *ngIf="searchResultFlag">
+
+    <h4 class="t-header">Work Center Parts</h4>
+    <pfep-items-grid #itemsGrid [wcPart]="wcPart" (parentFun)="parentFun()" [itemDetailFn]="itemDetailFn"
+      [gridData]="wcpGridData" [tableFields]="tableFieldsForParts" [selectedRackId]="pocDetails"
+      [selectedRackType]="selectedRackInfo.selectedRackType" [itemsAddedtoRack]="itemsAddedtoRack"
+      [dropDownValues]="dropDownValues">
+    </pfep-items-grid>
+  </div>
+
+  <p-dialog [header]="'Select Rack Type'" [(visible)]="showAddRackPopup" [style]="{width: '1250px'}"
+    [contentStyle]="{'overflow':'visible', 'min-height':'360px', 'width': '100%'}" [draggable]="false" [modal]="true"
+    [blockScroll]="true" [dismissableMask]="false" [maximizable]="true">
+    <pfep-parts-grid #popuptable [wcRack]="wcRack" [wcMasterRack]="wcMasterRack" [gridData]="masterRack"
+      [tableFields]="workCenterMasterRackTableField">
+    </pfep-parts-grid>
+    <p-footer>
+      <div class="check"><span [ngClass]="{'disablBtn': masterRack.length <= 0}" (click)="addWcRack()">Add</span></div>
+    </p-footer>
+  </p-dialog>
+  <p-confirmDialog [width]="600"></p-confirmDialog>
+  <p-overlayPanel #notesPanel [dismissable]="true" styleClass='notes-panel' (onHide)="notesClosed()">
+    <section class='notes-header'>
+      <span class='t-header'> Notes for {{pocDetails?.WorkCenterRack[rackIdKey] || ''}}</span>
+      <button class='edit-btn' (click)="editNotes(true)">
+        <i class='pi pi-pencil'></i>
+        <span> Edit</span>
+      </button>
+    </section>
+    <section class='notes-ctr'>
+      <p-inplace #inplace styleClass='notes-inplace' (onActivate)="editNotes(false)">
+        <div pInplaceDisplay [ngStyle]="{width: '450px', height: '300px'}">
+          <p *ngIf="!isEmpty(selectedRackInfo[notesKey])" [ngStyle]="{width: '100%', height: '100%'}"
+            class='notes-display'>
+            {{selectedRackInfo[notesKey]}}
+          </p>
+          <span *ngIf="isEmpty(selectedRackInfo[notesKey])" class='no-notes'
+            [ngStyle]="{width: '100%', height: '100%'}">
+            Notes is empty. Click to add.
+          </span>
+        </div>
+        <span pInplaceContent>
+          <textarea #notesText [ngStyle]="{width: '450px', height: '300px'}" [ngModel]="selectedRackInfo[notesKey]">
+          </textarea>
+        </span>
+      </p-inplace>
+
+      <section class='notes-btn-ctr'>
+        <button class='save-notes' (click)="notesPanel.hide($event); saveNotes(notesText)"> Save </button>
+        <button class='cancel-notes' (click)="notesPanel.hide($event); cancelNotes()"> Cancel </button>
+      </section>
+    </section>
+  </p-overlayPanel>
+  <div class="scrollButton" *ngIf="scrollButton && scrollText !== null">
+    <div class="pi"
+      [ngClass]="{'pi-chevron-down' : scrollText === 'Go to Work Center Parts', 'pi-chevron-up' : scrollText === 'Go to Rack Details'}"
+      (click)="checkScroll()"></div>
+  </div>
+  <div class="save-cancel-buttons" *ngIf="searchResultFlag && showSVG">
+    <div class="cancel-button" *ngIf="parentIp.parentScreenPath">
+      <button (click)="onCancel()">Cancel</button>
+    </div>
+    <div class="save-button" *ngIf="searchResultFlag && showSVG">
+      <button (click)="onSave()">Save</button>
+    </div>
+  </div>
+</div>
+
+<section>
+  <table id='table-export-pdf' [ngStyle]="{'display': 'none'}">
+    <thead>
+      <tr>
+        <th *ngFor="let col of tableFieldsForParts">
+          {{ col.header }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rowData of pdfTableData">
+        <td *ngFor="let col of tableFieldsForParts">
+          <span>{{ (rowData && rowData[col.field]) ? rowData[col.field] : '' }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+<div class="print-label-sec">
+  <div class= label-row1>
+    <div class="item-number-sec">12481653-002</div>
+    <div class="barcode-sec"></div>
+  </div>
+    <div class="label-row2">
+      <div class="presentation-type-sec"><span>Bulk</span></div>
+      <div class="workCenter-rackId-sec">E0007</div>
+      <div class="pou-container-sec">Bulk</div>
+    </div>
+    <div class="label-row3">
+    <div class="item-weight-sec">37.26</div>
+    <div class="supplying-location-sec">WISCONSIN METAL</div>
+  </div>
+</div>

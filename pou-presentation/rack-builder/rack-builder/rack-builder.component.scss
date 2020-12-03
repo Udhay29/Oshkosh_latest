@@ -1,0 +1,229 @@
+@import '../../../../../assets/scss/mixins';
+@import '../../../../../assets/scss/variables';
+
+.rack-builder-ctr {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 8px;
+        font-family: arial regular;
+        
+        .required {
+            color: $pfep-required-symbol-color;
+        }
+    }
+
+    .rack-builder-search-ctr {
+        @extend .section-styles;
+
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+
+        > * {
+            margin-right: 20px;
+        }
+    
+        .search-criteria-filter {
+            display: flex;
+            flex-flow: column;
+        }
+
+        .rack-builder-search-btn {
+            @include button(100px, 37px);
+        }
+
+        .rack-builder-create-btn{
+            @include button(165px, 37px);
+
+            margin-left: 55%;
+        }
+    }
+
+    .rack-type-new {
+
+        display: flex;
+        align-items: flex-start;
+        margin-top: 80px;
+        flex-direction: column;
+        margin-left: 30px;
+
+        .rack-type-new-text {
+            font-weight: bolder;
+        }
+
+        select {
+            width: 300px !important;
+            border: 1px solid red;
+    
+            &:focus {
+                box-shadow: none;
+            }
+        }
+     }
+
+    .rack-builder-content-ctr {
+        display: flex;
+        margin-top: 20px;
+        
+        .section-header {
+            margin-bottom: 10px;
+        }
+
+         .rack-details-ctr {
+             flex: 2;
+             margin-right: 15px;
+             display: flex;
+             flex-direction: column;
+             margin-right: 15px;
+             min-width: 325px;
+         }
+
+         .rack-assignment-table-ctr {
+             flex: 4;
+             margin-right: 15px;
+             display: flex;
+             flex-direction: column;
+             min-width: 750px;
+         }
+
+         td.no-records-td {
+            font-weight: bolder;
+            color: $osh-primary-color;
+         }
+
+         .rack-visualizations-ctr {
+             flex: 3;
+         }
+
+         .rack-details-form {
+            border: 1px solid $pfep-border-color;
+         }
+
+         .rack-attribute-ctr {
+            //  display: flex;
+            //  flex-direction: column;
+             margin: 10px;
+             .rack-title{
+                 display: inline-block;
+             }
+         }
+
+         .attr-input, .attr-drop-down {
+            width: 300px !important;
+
+            &:focus {
+                box-shadow: none;
+            }
+
+            &.invalid-field {
+                border: 1px solid red;
+            }
+         }
+
+         .rack-details-btns {
+             
+             display: flex;
+             justify-content: flex-end;
+             padding: 10px;
+         }
+
+         .confirm-rack-details-btn {
+             @include button(100%, 36px);
+
+             &:disabled {
+                 @include disabled-button(100%, 36px);
+             }
+         }
+
+
+         .segment-assignment {
+             display: flex;
+             flex-direction: column;
+         }
+
+         .segment-selection {
+             display: flex;
+
+             > * {
+                 margin-right: 15px;
+             }
+
+             /* .ui-radiobutton .ui-radiobutton-box {
+                 width: 22px !important;
+                 height: 22px !important;
+             }
+
+             .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+                border-color: #076589;
+                background-color: #ffffff;
+                color: #076589;
+                
+                .ui-radiobutton-icon {
+                    background-color: #076589;
+                }
+             } */
+
+             .ui-radiobutton .ui-radiobutton-box:not(.ui-state-disabled):not(.ui-state-active):hover {
+                 border-color: #076589;
+             }
+
+             .ui-radiobutton .ui-radiobutton-box.ui-state-active:not(.ui-state-disabled):hover {
+                border-color: #076589;
+                background-color: #ffffff;
+                color: #076589;
+             }
+
+             /* .ui-chkbox-label {
+                 margin: 4px 0 0 0.6em !important;
+             } */
+
+             .ui-chkbox-label.ui-label-disabled {
+                 color: gray;
+             }
+         }
+
+         .segment-assignment-table {
+             margin-top: 20px;
+         }
+    }
+
+    .rack-change-cnfrmtn-content-btns {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+
+        button {
+            @include button(auto, 40px);
+            margin-left: 20px;
+            min-width: 80px;
+        }
+    }
+
+    .rack-builder-btns {
+        @extend .section-styles;
+        margin: 20px 0;
+        padding: 15px;
+        justify-content: flex-end;
+        display: flex;
+
+        .rack-btn-save {
+            @include button(100px, 37px);
+
+            &:disabled {
+                @include disabled-button(100px, 37px);
+            }
+        }
+    }
+
+    .results-table-ctr th.STORAGE_UNIT_ID, td.STORAGE_UNIT_ID {
+        width: 130px;
+    }
+}
+
+.look-up-data-popup.rack-builder-STORAGE_UNIT_ID.ui-dialog.ui-widget .ui-dialog-content.ui-widget-content {
+    min-width: 1000px !important;
+}

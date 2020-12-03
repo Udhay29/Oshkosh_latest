@@ -1,0 +1,192 @@
+<section class="rack-builder-ctr">
+    <section class="rack-builder-search-ctr">
+        <ng-container *ngFor="let field of searchFields" [ngSwitch]="field.type">
+            <section class="search-criteria-filter search-criteria-wildcard" *ngSwitchCase="'wildCard'">
+                <p class="title">
+                    {{ field.title + ":" }}
+                    <span class="required" *ngIf="field.key === masterKitId">*</span>
+                </p>
+                <pfep-wild-card-lookup [config]="field.config" [defaultselecteddropDownValue]="
+                        field.config.defaultselecteddropDownValue
+                    " [showInvalid]="emptySearchFields.indexOf(field.key) > -1"
+                    [selectEntireRecord]="field.selectEntireRecord ? true : false"
+                    (changeEvent)="wildCardChangeEvent($event, field.key)" [modalClass]="'rack-builder-' + field.key">
+                </pfep-wild-card-lookup>
+            </section>
+        </ng-container>
+        <button class="rack-builder-search-btn" (click)="searchClicked()">
+            Search
+        </button>
+        <button class="rack-builder-create-btn" (click)="createNewRack()" *ngIf="isEditable">
+            Create New Rack
+        </button>
+    </section>
+    <section class="rack-type-new" *ngIf="!showForm && isNew">
+        <p class="rack-type-new-text title">Please select Rack type: <span class='required'>*</span></p>
+        <select class="rack-type-dd form-control" (change)="newRackTypeChange($event)">
+            <option value="null"> Select Rack Type</option>
+            <option *ngFor="let opt of dropDownvalues[rackTypesKey]" [value]="opt[rackTypeddKey]">
+                {{ opt[rackTypeddKey] }}
+            </option>
+        </select>
+    </section>
+    <section class="rack-builder-content-ctr" *ngIf="detailsAvailable || showForm">
+        <section class="rack-details-ctr">
+            <span class="t-header section-header">Rack Details</span>
+            <form [formGroup]="rackDetails" autocomplete="off" class="rack-details-form">
+                <ng-container *ngFor="let item of fieldsMap[currentRackType]">
+                    <section [ngSwitch]="item.type" class="rack-attribute-ctr">
+                        <span class="title rack-title" [pTooltip]="item.fullForm" tooltipPosition="right"> {{ item.label }} :
+                            <span *ngIf="nonMandatoryFields[currentRackType].indexOf(item.field) === -1"
+                                class='required'>
+                                *</span>
+                        </span>
+                        <input type="text" class="attr-input form-control" [ngClass]="{
+                                'invalid-field':
+                                    isEditable &&
+                                    invalidFields.indexOf(item.field) > -1
+                            }" autocomplete="false" *ngSwitchCase="'text'" (blur)="ipChanged(item.field)"
+                            [formControlName]="item.field" [readOnly]="!isEditable" />
+
+                        <input type="text" class="attr-input form-control" [ngClass]="{
+                                'invalid-field':
+                                    isEditable &&
+                                    invalidFields.indexOf(item.field) > -1
+                            }" autocomplete="false" *ngSwitchCase="'number'" (blur)="ipChanged(item.field)"
+                            [formControlName]="item.field" [readOnly]="!isEditable" numberOnly />
+
+                        <select [formControlName]="item.field" class="attr-drop-down form-control"
+                            *ngSwitchCase="'dropDown'" [disabled]="!isEditable" [ngClass]="{
+                                'invalid-field':
+                                    isEditable &&
+                                    invalidFields.indexOf(item.field) > -1
+                            }" (change)="
+                                ddValueChange(
+                                    $event.target.value,
+                                    item.field,
+                                    item.ddKey
+                                )
+                            ">
+                            <option [value]="null" *ngIf="item.field !== rackTypesKey">
+                                Select {{ item.label }}</option>
+                            <option *ngFor="let opt of dropDownvalues[item.field]" [selected]="opt.IsSelected === true"
+                                [value]="opt[item.ddKey]" [ngValue]="opt">{{
+                                    item.valueKey
+                                        ? opt[item.valueKey]
+                                        : opt[item.ddKey]
+                                }}</option>
+                        </select>
+                        <span [ngStyle]="{color: 'red'}"
+                            *ngIf="item.field === masterKitId && invalidFields.indexOf(masterKitId) > -1 && !isEmpty(rackDetails.controls[masterKitId].value)">
+                            The rack with this id already exists</span>
+                    </section>
+                </ng-container>
+                <section class="rack-details-btns" *ngIf="isEditable">
+                    <button type="button" class="confirm-rack-details-btn" (click)="confirmValues()"
+                        [disabled]="invalidFields.length > 0">
+                        Confirm Values
+                    </button>
+                </section>
+            </form>
+        </section>
+        <section class="rack-assignment-table-ctr">
+            <span class="t-header section-header">Segment/Branch Assignment</span>
+            <section class="segment-assignment">
+                <section class="segment-selection">
+                    <p-checkbox *ngFor="let segment of segments" name="segment" [value]="segment"
+                        [(ngModel)]="selectedSegments" [label]="segment" (onChange)=" segmentChkbxChange($event,
+                        segment)"></p-checkbox>
+                </section>
+                <section class="segment-assignment-table">
+                    <p-table [columns]="assignmentTableFields" [value]="assignmentTableData" [scrollable]="true"
+                        scrollHeight="520px" styleClass="assignment-data-table">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th style="width: 3.25em">
+                                    <input type="checkbox" [pTooltip]="'Select All'" tooltipPosition="left" (change)="
+                                            selectAllToggled(
+                                                $event.target.checked
+                                            )
+                                        " [checked]="selectAllChkBxStatus" [disabled]="!isEditable" />
+                                </th>
+                                <th *ngFor="let col of assignmentTableFields" [pSortableColumn]="col.field" [ngStyle]="{
+                                        width:
+                                            col.field === branchDescKey
+                                                ? '500px'
+                                                : 'auto'
+                                    }" [pSortableColumn]="col.field">
+                                    {{ col.header }}
+                                    <p-sortIcon [field]="col.field" (click)="onSort(col.field)"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                            <tr class="assignment-data-row">
+                                <td style="width: 3.25em;">
+                                    <input type="checkbox" [checked]="
+                                            selectedRows[rowData[branch]]
+                                        " [value]="rowData" (change)="
+                                            rowSelectionChanged(
+                                                $event.target.checked,
+                                                rowData
+                                            )
+                                        " [disabled]="!isEditable" />
+                                </td>
+                                <td *ngFor="let col of columns" class="col.field" [ngStyle]="{
+                                        width:
+                                            col.field === branchDescKey
+                                                ? '500px'
+                                                : 'auto'
+                                    }">
+                                    <p class="assignment-data-cell">
+                                        {{ rowData[col.field] }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="columns.length" align="center" class='no-records-td'>
+                                    Master rack id is not assigned to any segment/branch
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </section>
+            </section>
+        </section>
+        <section class="rack-visualizations-ctr">
+            <p class="t-header section-header">Rack Visualization</p>
+            <section class="rack-visualization">
+                <pfep-rack-visualization [rackValues]="rackValues"></pfep-rack-visualization>
+            </section>
+        </section>
+    </section>
+    <section class="rack-builder-btns" *ngIf="showForm && isEditable">
+        <button class="rack-btn-save" (click)="rackBuilderSave()"
+            [disabled]="invalidFields.length > 0 || selectedSegments.length === 0 || Object.keys(selectedRows).length === 0 || !hasEdits">
+            Save
+        </button>
+    </section>
+
+    <p-dialog [(visible)]="rackTypeChangeCnfrmtn" header="Rack type change confirmation" [modal]="true"
+        [blockScroll]="true" [closeOnEscape]="false">
+        <section class="rack-change-cnfrmtn-content">
+            <p class="rack-change-cnfrmtn-content-text">
+                Changing rack type would clear all the values.
+            </p>
+            <br />
+            <p>
+                Would you like to continue?
+            </p>
+            <section class="rack-change-cnfrmtn-content-btns">
+                <button class="cnfrm-btn" (click)="cnfrmRackTypeChange()">
+                    Clear values and proceed
+                </button>
+                <button class="cancel-btn" (click)="cancelRackTypeChange()">
+                    Cancel
+                </button>
+            </section>
+        </section>
+    </p-dialog>
+</section>

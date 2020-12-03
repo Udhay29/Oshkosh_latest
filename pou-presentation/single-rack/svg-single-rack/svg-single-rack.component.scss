@@ -1,0 +1,48 @@
+@import '../../../../../assets/scss/mixins';
+@import '../../../../../assets/scss/variables';
+
+
+.rack-visualization-ctr {
+    display: flex;
+    border:  2px solid $osh-primary-color;
+    background-color: $pfep-border-color;
+    overflow-x:auto;
+
+    &.empty {
+        border-width: 0 !important;
+    }
+
+    &:not(.Shelf) {
+        justify-content: center;
+    }
+    
+    .rack-ctr {
+        
+    }
+
+    .left-hand-stack{
+        border: 1px solid grey;
+        top: 50px;
+        left: 45px;
+        position: relative;
+        display: block;
+        min-width: 100px;
+        background-color: lightgray;
+        word-break: break-word;
+    }
+
+    .right-hand-stack{
+        border: 1px solid grey;
+        top: 50px;
+        right: 45px;
+        position: relative;
+        display: block;
+        min-width: 100px;
+        background-color: lightgray;
+        word-break: break-word;
+    }
+
+    .hand-stack-list{
+        text-align: center; padding:0px; font-size: 12px; font-weight:700;
+    }
+}

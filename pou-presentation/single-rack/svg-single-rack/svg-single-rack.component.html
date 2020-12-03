@@ -1,0 +1,21 @@
+<section [class]="rackValues?.WorkCenterRack?.MasterRack['STORAGE_UNIT_TYPE'] + ' rack-visualization-ctr'">
+  <div *ngIf="rackValues?.WorkCenterRack?.MasterRack['STORAGE_UNIT_TYPE']=='Shelf'" class="left-hand-stack"
+    [ngStyle]="{height:handStackHeight+'px'}">
+    <ul type="none" class="hand-stack-list">
+      <ng-container *ngFor="let item of rackValues?.WorkCenterRack?.LEFT_ITEMS;">
+        <li>{{item?.ITEM_ID}}</li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <div class="rack-ctr"></div>
+
+  <div *ngIf="rackValues?.WorkCenterRack?.MasterRack['STORAGE_UNIT_TYPE']=='Shelf'" class="right-hand-stack"
+    [ngStyle]="{height:handStackHeight+'px'}">
+    <ul type="none" class="hand-stack-list">
+      <ng-container *ngFor="let item of rackValues?.WorkCenterRack?.RIGHT_ITEMS;">
+        <li>{{item?.ITEM_ID}}</li>
+      </ng-container>
+    </ul>
+  </div>
+</section>

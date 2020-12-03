@@ -1,0 +1,18 @@
+<div id="pkgc-1" class=" tab-pane ">
+  <div class="pkgdtails">
+    <div class="pd-header">
+      <div class="page-title ">
+        <h3 class="pg-title">POU Presentation</h3>
+      </div>
+      <section class='missing-data-table-nav-bar'>
+        <section>
+          <pfep-tab-list [className]="'pou-presentation-tab-ctr'" [tabs]="tabsList" [selectedTab]="selectedStack"
+            (callBack)="onTabClick($event, true)"></pfep-tab-list>
+        </section>
+        <div>
+          <router-outlet></router-outlet>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

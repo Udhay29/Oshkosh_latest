@@ -1,0 +1,329 @@
+@import '../../../../../assets/scss/variables';
+
+.poc-svg-shelf {
+  display: flex;
+  width:100%;
+  height: 100%;
+  border-right: 1px solid $pfep-border-color;
+
+  .poc-part{
+    display: flex;
+  }
+  .drag-wrapper{
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .confirm-button {
+      margin: 20px 0 10px;
+      button{
+        display: inline-block;
+        background: #d57e00;
+        color:#fff;
+        padding: 5px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+      }
+    }
+  }
+  .poc-wrapper{
+    display: flex;
+  }
+  .handstack {
+    cursor: pointer;
+  }
+
+  .svg-part{
+    width: 30%;
+    select{
+      max-width: 100px;
+    }
+  }
+.example-container{
+  max-width: 100%;
+  width: 100%;
+  display: inline-block;
+//   vertical-align: top;
+  margin-bottom: 15px;
+}
+
+.example-box.empty-space {
+  border: 2px solid $emptySpaceBorderColor;
+  background-color: $emptySpaceBGColor !important;
+  max-width: inherit;
+}
+
+.example-list{
+  max-width: 600px;
+  min-height: 60px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.header{
+  float: left;
+  font-size: 12px;
+  margin-right: 20px;
+  h2{
+      font-size: 20px;
+  }
+  h4 span{
+      font-size: 15px;
+      display: block;
+  }
+}
+.item_des span{
+    display: block;
+}
+.example-box {
+  padding: 6px;
+  position: relative;
+  color: rgba(0, 0, 0, 0.87);
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+  min-width: 100px;
+  margin: 0 4px;
+  text-align: center;
+  border: 2px solid $osh-primary-color;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.example-box.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2) 0 8px 10px 1px rgba(0, 0, 0, 0.14) 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  background: white;
+  font-size: 14px;
+  min-width: 100px;
+  margin: 0 4px;
+  text-align: center;
+  border: 2px solid $osh-primary-color;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.remove{
+  padding: 0 3px;
+  box-sizing: border-box;
+  display: inline-block;
+  font-size: 13px;
+  position: relative;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  line-height: 15px;
+  outline: none;
+  font-weight: bold;
+}
+.rmv{
+  @extend .remove;
+  padding: 0 5px !important;
+}
+
+.cdkdragdiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+  height: 30px;
+  width: 125px;
+}
+
+.example-container > div button{
+  width: 45px;
+  height: 24px;
+  line-height: 2px;
+  margin-right: 5px;
+  position: relative;
+  padding: 0;
+  border-radius: 5px;
+  outline: none;
+}
+.example-box > span:first-child{
+  width:70%;
+}
+.add{
+    position: absolute;
+    top: 10%;
+    right: 35px;   
+}
+.border {  
+  border: 1px solid red;
+}
+table td, table th{
+  border: 1px solid;
+  padding: 7px;
+}
+table{
+  border-collapse: collapse ;
+  margin: 4% auto;
+}
+button{
+  border: 1px solid #d57e00;
+  color: #d57e00;
+  background: #fff;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.bottom-buttons{
+  text-align: center;
+}
+.msg-display{
+    min-height: 300px;
+    p{
+        text-align: center;
+    }
+}
+.svg-part {
+  float: right;
+  padding: 0 20px;
+}
+.stack-text{
+  font-size: 13px;
+  display: block;
+  width: 100%;
+  color: #d57e00;
+}
+.Left-Items, .Right-Items{
+  max-width: 125px;
+  width: 100%;
+  border: 2px solid $osh-disabled-color;
+  display: -webkit-box;
+  display: flex;
+  margin: 0 10px;
+  .ul-list{
+    padding: 5px 10px;
+    height: calc(100% - 50px);
+    list-style-type: none;
+    > div{
+      display: block;
+      width: 100%;
+      &.cdkdragdiv{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+  > div{
+    width:100%;
+  }
+  h6{
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-bottom: 2px solid $osh-disabled-color;
+  }
+}
+
+  
+
+}
+.example-box.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2) 0 8px 10px 1px rgba(0, 0, 0, 0.14) 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  background: white;
+  font-size: 14px;
+  min-width: 100px;
+  margin: 0 4px;
+  text-align: center;
+  border: 2px solid $osh-primary-color;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: space-between;
+
+  .remove{
+    padding: 0 3px;
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 13px;
+    position: relative;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    line-height: 15px;
+    outline: none;
+  }
+  .bottom-buttons button{
+    width: 45px;
+    height: 24px;
+    line-height: 2px;
+    margin-right: 5px;
+    position: relative;
+    padding: 0;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #d57e00;
+    color: #d57e00;
+    background: #fff;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+}
+
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+.cdk-drag-preview .rmv{
+  display: none;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+
+.cdkdragdiv.cdk-drag-preview {
+  height: 30px;
+  width: 125px;
+  cursor: move;
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}

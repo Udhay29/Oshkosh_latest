@@ -1,0 +1,18 @@
+@import '../../../../../assets/scss/mixins';
+@import '../../../../../assets/scss/variables';
+
+
+.rack-visualization-ctr {
+    display: flex;
+    justify-content: center;
+    border:  2px solid $osh-primary-color;
+    background-color: $pfep-border-color;
+
+    &.empty {
+        border-width: 0 !important;
+    }
+    
+    .rack-ctr {
+        
+    }
+}

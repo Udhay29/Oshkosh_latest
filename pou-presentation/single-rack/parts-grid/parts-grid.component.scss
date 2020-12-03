@@ -1,0 +1,269 @@
+@import "../../../../../assets/scss/variables";
+@import "../../../../../assets/scss/mixins";
+
+.row.parts-grid-parent-single-rack {
+  margin-left: 0px;
+  div.parent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    
+    div.table_title {
+      color: steelblue;
+      font-size: 18px;
+    }
+    div.single-rack-search {
+      width: 390px;
+    }
+    div.single-rack-grid-functions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      > .grid-functions {
+        display: flex;
+      }
+
+      > .grid-functions * {
+        //margin-left: 10px;
+      }
+
+      .grid-title {
+        color: $pfep-sub-heading-color;
+        margin-bottom: 0px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+      }
+    }
+
+    .item-plan-detail-link {
+      @include button(auto, 38px);
+
+      &.link-disabled {
+        @include disabled-button(auto, 38px);
+        pointer-events: none;
+      }
+
+      line-height: 38px;
+    }
+
+    .edit-record-btn {
+      @include button(76px, 38px);
+
+      &:disabled {
+        @include disabled-button(76px, 38px);
+      }
+    }
+  }
+
+  .parts-grid .filter-row {
+    input,
+    select {
+      width: 100%;
+      border: 1px solid $pfep-border-color;
+      border-radius: 4px;
+    }
+  }
+
+  .work-center-parts-grid.ui-widget.ui-table {
+    max-width: 100%;
+
+    td,
+    th {
+      text-align: center;
+    }
+
+    td[align="center"][colspan="30"] {
+      text-align: left;
+      padding-left: 800px;
+    }
+
+    td.no-records {
+      text-align: left;
+      padding-left: 5%;
+    }
+
+    td {
+      height: 36px !important;
+      white-space: nowrap;
+      text-overflow: ellipsis;  
+      overflow: hidden;
+    }
+
+    .ui-table-frozen-view .no-records span {
+      display: none;
+    } 
+    
+    .ui-table-unfrozen-view .no-records {
+      border-left: 0;
+    }
+
+    .ui-table-frozen-view .ui-table-scrollable-body {
+      padding-bottom: 17px;
+      max-height: 260px !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* .ui-table-scrollable-view.ui-table-frozen-view .ui-table-scrollable-body {
+      // TODO: this code is to generate scroll on frozen column as well which is a slight performance hit. PLease talk to scott and tehn uncomment
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      -ms-overflow-style: none;
+      padding-bottom: 0px;
+    } */
+
+  }
+
+  .ui-g-8 {
+    width: 45.6667%;
+  }
+
+  > .grid-container {
+    padding-right: 0px;
+  }
+
+  .ui-table .ui-table-thead > tr > th:last-child {
+    border: 1px solid $pfep-border-color;
+  }
+
+  // don't show row highlight color
+  .ui-selectable-row.ui-state-highlight td {
+    border: 1px solid #c8c8c8 !important;
+  }
+
+  .ui-table .ui-table-tbody > tr.ui-state-highlight a {
+    color: #007ad9;
+  }
+
+  .item-concise-details {
+   transition: all 1s ease-in-out;
+   overflow: hidden;
+    &-list {
+      height: auto;
+    }
+  }
+
+  .parts-grid-btns {
+    @extend .section-styles;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+    min-height: 70px;
+    margin: 15px 0 0;
+
+    button {
+      @include button(auto, 40px);
+
+      &:disabled {
+        @include disabled-button(auto, 40px);
+      }
+    }
+  }
+
+
+  .button {
+    background: #d57e00;
+    color:#fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: block;
+    cursor: pointer;
+  }
+  .error-border{
+    border-color: red;
+  }
+  table tr input[type="checkbox"]{
+    cursor: pointer;
+  }
+  td, th {
+    text-align: center;
+  }
+  
+  span.button.disableBtn {
+    background: gray;
+    pointer-events: none;
+  }
+  
+  button.add-rack-btn {
+    @include button(100%, 36px);
+  
+    &:disabled {
+      @include disabled-button(100%, 36px);
+    }
+  }
+
+}
+
+.execute-ctr-error {
+  color: red;
+  font-size: 11px;
+  margin-right: 20px;
+}
+
+.checkbox-icon {
+  font-size: 20px;
+  &.pi-check {
+    color: #07bd07;
+  }
+
+  &.pi-times {
+    color: #e21313;
+  }
+}
+
+input.invalid-field,
+select.invalid-field {
+  border: 1px solid red !important;
+}
+
+span.md-search-date.ui-calendar.ui-calendar-w-btn.invalid-field
+  input.ui-inputtext {
+  border: 1px solid red !important;
+}
+
+.edit-modal-footer-buttons {
+  @include button($width: auto);
+
+  &:disabled {
+    @include disabled-button($width: auto);
+    border-color: gray !important;
+    display: inline-block;
+  }
+  
+  display: inline-block;
+}
+
+
+
+
+
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .ui-table-frozen-view .ui-table-scrollable-body td {
+    min-height: 38.46px !important;
+  }
+
+  .ui-table-unfrozen-view .ui-table-scrollable-body {
+    max-height: 277px !important;
+  }
+
+  .parts-grid-btns {
+    margin-top: 25px !important;
+  }
+}
+
+.anchTag {
+  color: #007ad9;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: #116fbf;
+  }
+}

@@ -1,0 +1,69 @@
+<div class="poc-svg-shelf">
+  <div class="poc-wrapper">
+    <div cdkDropListGroup *ngIf="filteredDatas.length > 0 && filteredDatas1.length > 0" class="poc-part">
+      <div class = "placement-wrapper">
+        <h4>Left Placements</h4>
+        <div class="left-rack">
+          <div class="example-container" *ngFor="let data of filteredDatas; let idx = index">
+            <div class="header">
+              <h2>Placement {{idx+1}}</h2>
+            </div>
+            <div cdkDropList #itemsref="cdkDropList" cdkDropListOrientation="horizontal"
+              [cdkDropListData]="data['RackItems']" class="example-list" [cdkDropListEnterPredicate]="noReturnPredicate"
+              (cdkDropListDropped)="drop($event, 'items')">
+              <div class="example-box ctr" *ngFor="let item of data['RackItems']; let i = index" [cdkDragData]="item"
+                cdkDrag>
+                <div class="item_des">
+                  <span>{{item.ITEM_ID}} </span>
+                </div>
+                <div class="bottom-buttons">
+                  <div><input *ngIf="swapArray.indexOf(idx) < 0" type="checkbox"
+                      (change)="toggleSwap(i, idx, item, 'filteredDatas')" /></div>
+                  <button (click)="swap($event, idx, item, i)" *ngIf="swapArray.indexOf(idx) >= 0">swap</button>
+                  <span class="remove" (click)="delete($event,idx, i, 'filteredDatas')">x</span>
+                </div>
+              </div>
+              <div (click)="addContainer(idx, 'filteredDatas')" [ngClass]="{ 'no-item' : data['RackItems'].length <= 0 }"
+                class="last-item empty-space">
+                <p>+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class = "placement-wrapper">
+        <h4>Right Placements</h4>
+        <div class="right-rack">
+          <div class="example-container" *ngFor="let data of filteredDatas1; let idx = index">
+            <div class="header">
+              <h2>Placement {{idx+1}}</h2>
+            </div>
+            <div cdkDropList #itemsref="cdkDropList" cdkDropListOrientation="horizontal"
+              [cdkDropListData]="data['RackItems']" class="example-list" [cdkDropListEnterPredicate]="noReturnPredicate"
+              (cdkDropListDropped)="drop($event, 'items')">
+              <div class="example-box ctr" *ngFor="let item of data['RackItems']; let i = index" [cdkDragData]="item"
+                cdkDrag>
+                <div class="item_des">
+                  <span>{{item.ITEM_ID}} </span>
+                </div>
+                <div class="bottom-buttons">
+                  <div><input *ngIf="swapArray1.indexOf(idx) < 0" type="checkbox"
+                      (change)="toggleSwap(i, idx, item,'filteredDatas1')" /></div>
+                  <button (click)="swap($event, idx, item, i, 1)" *ngIf="swapArray1.indexOf(idx) >= 0">swap</button>
+                  <span class="remove" (click)="delete($event,idx, i, 'filteredDatas1')">x</span>
+                </div>
+              </div>
+              <div (click)="addContainer(idx, 'filteredDatas1')" [ngClass]="{ 'no-item' : data['RackItems'].length <= 0 }"
+                class="last-item empty-space">
+                <p>+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="confirm-button">
+      <button type="button" (click)="getBagsvg()">Confirm Arrangement</button>
+    </div>
+  </div>
+</div>
